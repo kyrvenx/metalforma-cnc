@@ -1,0 +1,14 @@
+body {
+  min-width: 320px;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--azul);
+  color: var(--grafito);
+}
