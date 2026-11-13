@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useCarrito } from '../../context/CarritoContext';
+import { useAuth } from '../../context/AuthContext';
 
 const enlacesPrincipales = [
   { texto: 'Inicio', ruta: '/' },
@@ -11,6 +12,7 @@ const enlacesPrincipales = [
 
 const Nav = () => {
   const { cantidadTotal } = useCarrito();
+  const { autenticado, cargando } = useAuth();
 
   return (
     <nav>
@@ -30,16 +32,18 @@ const Nav = () => {
             </li>
           ))}
 
-          <li>
-            <NavLink
-              to="/carrito"
-              className={({ isActive }) =>
-                isActive ? 'activo' : ''
-              }
-            >
-              Solicitud ({cantidadTotal})
-            </NavLink>
-          </li>
+          {!cargando && autenticado && (
+            <li>
+              <NavLink
+                to="/carrito"
+                className={({ isActive }) =>
+                  isActive ? 'activo' : ''
+                }
+              >
+                Solicitud ({cantidadTotal})
+              </NavLink>
+            </li>
+          )}
         </ul>
 
         <ul className="nav-accesos">
@@ -62,17 +66,6 @@ const Nav = () => {
               }
             >
               Clientes
-            </NavLink>
-          </li>
-
-          <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                isActive ? 'activo' : ''
-              }
-            >
-              Administración
             </NavLink>
           </li>
         </ul>

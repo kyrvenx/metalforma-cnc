@@ -14,50 +14,84 @@ import CarritoPage from './pages/CarritoPage';
 import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedUserRoute from './components/ProtectedUserRoute';
 
 import RegistroPage from './pages/RegistroPage';
 import LoginUsuarioPage from './pages/LoginUsuarioPage';
 
 import { CarritoProvider } from './context/CarritoContext';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
     <BrowserRouter>
-      <CarritoProvider>
-        <div className="App">
-          <Header />
-          <Nav />
+      <AuthProvider>
+        <CarritoProvider>
+          <div className="App">
+            <Header />
+            <Nav />
 
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/nosotros" element={<NosotrosPage />} />
-            <Route path="/novedades" element={<NovedadesPage />} />
-            <Route path="/contacto" element={<ContactoPage />} />
-            <Route path="/carrito" element={<CarritoPage />} />
+            <Routes>
+              <Route
+                path="/"
+                element={<HomePage />}
+              />
 
-            {/* Acceso administrativo */}
-            <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/nosotros"
+                element={<NosotrosPage />}
+              />
 
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/novedades"
+                element={<NovedadesPage />}
+              />
 
-            {/* Acceso de clientes */}
-            <Route path="/registro" element={<RegistroPage />} />
-            <Route
-              path="/login-usuario"
-              element={<LoginUsuarioPage />}
-            />
-          </Routes>
+              <Route
+                path="/contacto"
+                element={<ContactoPage />}
+              />
 
-          <Footer />
-        </div>
-      </CarritoProvider>
+              <Route
+                path="/carrito"
+                element={
+                  <ProtectedUserRoute>
+                    <CarritoPage />
+                  </ProtectedUserRoute>
+                }
+              />
+
+              {/* Acceso administrativo */}
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
+
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Acceso de clientes */}
+              <Route
+                path="/registro"
+                element={<RegistroPage />}
+              />
+
+              <Route
+                path="/login-usuario"
+                element={<LoginUsuarioPage />}
+              />
+            </Routes>
+
+            <Footer />
+          </div>
+        </CarritoProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

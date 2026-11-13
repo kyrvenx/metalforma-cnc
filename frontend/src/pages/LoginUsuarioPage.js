@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './LoginPage.css';
 
 const API_URL = 'http://localhost:3001';
 
-const LoginUsuarioPage = ( ) => {
-  const navigate = useNavigate();
-
+const LoginUsuarioPage = () => {
+  
   const [formulario, setFormulario] = useState({
     email: '',
     password: ''
@@ -26,18 +25,22 @@ const LoginUsuarioPage = ( ) => {
 
   const manejarEnvio = async (evento) => {
     evento.preventDefault();
+
     setMensaje('');
     setCargando(true);
 
     try {
-      const respuesta = await fetch(`${API_URL}/api/usuarios/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(formulario)
-      });
+      const respuesta = await fetch(
+        `${API_URL}/api/usuarios/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(formulario)
+        }
+      );
 
       const datos = await respuesta.json();
 
@@ -49,9 +52,13 @@ const LoginUsuarioPage = ( ) => {
 
       setMensaje(`Bienvenido/a, ${datos.usuario.nombre}.`);
 
+      /*
+       * Recarga la aplicación para que AuthContext vuelva
+       * a consultar la sesión y Nav muestre Solicitud.
+       */
       setTimeout(() => {
-        navigate('/');
-      }, 1000);
+        window.location.href = '/';
+      }, 700);
     } catch (error) {
       setMensaje(error.message);
     } finally {
@@ -69,11 +76,13 @@ const LoginUsuarioPage = ( ) => {
         <h1>Acceso de clientes</h1>
 
         <p className="login-card__intro">
-          Iniciá sesión para acceder a beneficios exclusivos y gestionar tus
-          solicitudes de presupuesto.
+          Iniciá sesión para acceder a tus solicitudes de presupuesto.
         </p>
 
-        <form onSubmit={manejarEnvio} className="login-form">
+        <form
+          onSubmit={manejarEnvio}
+          className="login-form"
+        >
           <label htmlFor="email">
             Correo electrónico
           </label>
@@ -104,15 +113,22 @@ const LoginUsuarioPage = ( ) => {
             required
           />
 
-          <button type="submit" disabled={cargando}>
-            {cargando ? 'Ingresando...' : 'Iniciar sesión'}
+          <button
+            type="submit"
+            disabled={cargando}
+          >
+            {cargando
+              ? 'Ingresando...'
+              : 'Iniciar sesión'}
           </button>
         </form>
 
         {mensaje && (
           <p
             className={`login-message ${
-              mensaje.includes('Bienvenido') ? 'success' : 'error'
+              mensaje.includes('Bienvenido')
+                ? 'success'
+                : 'error'
             }`}
           >
             {mensaje}
@@ -126,7 +142,10 @@ const LoginUsuarioPage = ( ) => {
           </Link>
         </p>
 
-        <Link className="login-back" to="/">
+        <Link
+          className="login-back"
+          to="/"
+        >
           Volver al sitio
         </Link>
       </section>
