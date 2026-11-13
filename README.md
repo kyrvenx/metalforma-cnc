@@ -2,24 +2,25 @@
 
 Sitio web para mostrar proyectos de fabricación CNC y recibir solicitudes de presupuesto.
 
-## Tecnologías
+El proyecto fue desarrollado como adaptación temática del sitio original de Transportes, manteniendo sus secciones principales y agregando funcionalidades de usuarios, solicitudes y administración.
+
+## Tecnologías utilizadas
 
 - React
+- React Router
 - Node.js
 - Express
 - MySQL
+- PHPMyAdmin
+- Express Session
+- Bcrypt
 
-## Estructura
+## Estructura del proyecto
 
-- `frontend`: aplicación React.
-- `backend`: servidor y API.
-- `metalforma.sql`: base de datos.
-
-## Ejecución
-
-Backend:
-
-```bash
-cd backend
-npm install
-npm start
+```text
+transportes/
+├── backend/
+├── frontend/
+├── metalforma_cnc.sql
+├── README.md
+└── .gitignore
