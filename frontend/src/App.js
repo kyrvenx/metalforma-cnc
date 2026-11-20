@@ -1,5 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from 'react-router-dom';
 
 import Header from './components/layout/Header';
 import Nav from './components/layout/Nav';
@@ -11,11 +15,7 @@ import NovedadesPage from './pages/NovedadesPage';
 import ContactoPage from './pages/ContactoPage';
 import CarritoPage from './pages/CarritoPage';
 
-import LoginPage from './pages/LoginPage';
-import AdminDashboard from './pages/AdminDashboard';
-import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedUserRoute from './components/ProtectedUserRoute';
-
 import RegistroPage from './pages/RegistroPage';
 import LoginUsuarioPage from './pages/LoginUsuarioPage';
 
@@ -27,11 +27,15 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <CarritoProvider>
+
           <div className="App">
+
             <Header />
+
             <Nav />
 
             <Routes>
+
               <Route
                 path="/"
                 element={<HomePage />}
@@ -61,22 +65,6 @@ function App() {
                 }
               />
 
-              {/* Acceso administrativo */}
-              <Route
-                path="/login"
-                element={<LoginPage />}
-              />
-
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Acceso de clientes */}
               <Route
                 path="/registro"
                 element={<RegistroPage />}
@@ -86,10 +74,13 @@ function App() {
                 path="/login-usuario"
                 element={<LoginUsuarioPage />}
               />
+
             </Routes>
 
             <Footer />
+
           </div>
+
         </CarritoProvider>
       </AuthProvider>
     </BrowserRouter>

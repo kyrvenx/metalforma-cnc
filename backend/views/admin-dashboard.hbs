@@ -1,0 +1,214 @@
+<main class="admin-page">
+
+  <div class="admin-shell">
+
+    <header class="admin-header">
+      <div>
+        <p class="eyebrow">
+          ÁREA RESTRINGIDA
+        </p>
+
+        <h1>
+          Panel administrativo
+        </h1>
+
+        <p>
+          Sesión iniciada como
+          {{administrador.nombre}}
+          ({{administrador.email}}).
+        </p>
+      </div>
+
+      <form
+        method="POST"
+        action="/admin/panel/logout"
+      >
+        <button
+          class="button secondary"
+          type="submit"
+        >
+          Cerrar sesión
+        </button>
+      </form>
+    </header>
+
+    {{#if mensaje}}
+      <div class="alert success">
+        {{mensaje}}
+      </div>
+    {{/if}}
+
+    {{#if error}}
+      <div class="alert error">
+        {{error}}
+      </div>
+    {{/if}}
+
+    <section class="admin-card">
+
+      <p class="eyebrow">
+        NUEVO PROYECTO
+      </p>
+
+      <h2>
+        Agregar proyecto al catálogo
+      </h2>
+
+      <form
+        method="POST"
+        action="/admin/panel/novedades"
+        enctype="multipart/form-data"
+        class="admin-form"
+      >
+        <label for="titulo">
+          Título del proyecto
+        </label>
+
+        <input
+          id="titulo"
+          name="titulo"
+          type="text"
+          required
+          placeholder="Ejemplo: Placa metálica personalizada"
+        />
+
+        <label for="descripcion">
+          Descripción
+        </label>
+
+        <textarea
+          id="descripcion"
+          name="descripcion"
+          rows="4"
+          required
+        ></textarea>
+
+        <label for="imagen">
+          Seleccionar imagen desde la computadora
+        </label>
+
+        <input
+          id="imagen"
+          name="imagen"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+        />
+
+        <button type="submit">
+          Agregar proyecto
+        </button>
+      </form>
+
+    </section>
+
+    <section>
+
+      <p class="eyebrow">
+        CONTENIDO ACTUAL
+      </p>
+
+      <h2>
+        Proyectos publicados
+      </h2>
+
+      {{#if novedades.length}}
+
+        <div class="project-list">
+
+          {{#each novedades}}
+
+            <article class="project-card">
+
+              <form
+                method="POST"
+                action="/admin/panel/novedades/{{id}}/editar"
+                enctype="multipart/form-data"
+                class="admin-form"
+              >
+                <strong>
+                  PROYECTO #{{id}}
+                </strong>
+
+                <label for="titulo-{{id}}">
+                  Título
+                </label>
+
+                <input
+                  id="titulo-{{id}}"
+                  name="titulo"
+                  type="text"
+                  value="{{titulo}}"
+                  required
+                />
+
+                <label for="descripcion-{{id}}">
+                  Descripción
+                </label>
+
+                <textarea
+                  id="descripcion-{{id}}"
+                  name="descripcion"
+                  rows="3"
+                  required
+                >{{descripcion}}</textarea>
+
+                <label for="imagen-{{id}}">
+                  Reemplazar imagen
+                </label>
+
+                <input
+                  id="imagen-{{id}}"
+                  name="imagen"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                />
+
+                {{#if imagen}}
+                  <p>
+                    Imagen actual:
+                  </p>
+
+                  <img
+                    src="{{imagen}}"
+                    alt="{{titulo}}"
+                    style="max-width: 220px; border-radius: 6px;"
+                  />
+                {{/if}}
+
+                <button type="submit">
+                  Guardar cambios
+                </button>
+              </form>
+
+              <form
+                method="POST"
+                action="/admin/panel/novedades/{{id}}/eliminar"
+                onsubmit="return confirm('¿Seguro que querés eliminar este proyecto?');"
+              >
+                <button
+                  class="button danger"
+                  type="submit"
+                >
+                  Eliminar
+                </button>
+              </form>
+
+            </article>
+
+          {{/each}}
+
+        </div>
+
+      {{else}}
+
+        <p>
+          No hay proyectos cargados.
+        </p>
+
+      {{/if}}
+
+    </section>
+
+  </div>
+
+</main>

@@ -1,8 +1,59 @@
 const pool = require('../bd');
+const resend = require('../config/resend');
+
+function escaparHtml(texto = '') {
+  return String(texto)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+async function enviarCorreoSolicitud({
+  usuario,
+  telefono,
+  mensaje,
+  piezas,
+  solicitudId
+}) {
+  const listaPiezas = piezas.length
+    ? piezas
+        .map(
+          (pieza) =>
+            `<li>${escaparHtml(pieza.nombre)} — cantidad: ${escaparHtml(
+              pieza.cantidad
+            )}</li>`
+        )
+        .join('')
+    : '<li>Consulta general sin piezas seleccionadas</li>';
+
+  await resend.emails.send({
+    from: process.env.RESEND_FROM,
+    to: process.env.RESEND_TO,
+    subject: `Nueva solicitud de presupuesto #${solicitudId}`,
+    html: `
+      <h2>Nueva solicitud de presupuesto</h2>
+
+      <p><strong>Número de solicitud:</strong> ${solicitudId}</p>
+      <p><strong>Cliente:</strong> ${escaparHtml(usuario.nombre)}</p>
+      <p><strong>Email:</strong> ${escaparHtml(usuario.email)}</p>
+      <p><strong>Teléfono:</strong> ${escaparHtml(telefono || 'No indicado')}</p>
+
+      <p><strong>Detalle del proyecto:</strong></p>
+      <p>${escaparHtml(mensaje)}</p>
+
+      <p><strong>Piezas solicitadas:</strong></p>
+      <ul>
+        ${listaPiezas}
+      </ul>
+    `
+  });
+}
 
 async function crearSolicitud(req, res) {
   const { telefono, mensaje, piezas } = req.body;
-  const usuarioId = req.session.usuario.id;
+  const usuario = req.session.usuario;
 
   if (!mensaje || !mensaje.trim()) {
     return res.status(400).json({
@@ -16,7 +67,7 @@ async function crearSolicitud(req, res) {
        (usuario_id, telefono, mensaje)
        VALUES (?, ?, ?)`,
       [
-        usuarioId,
+        usuario.id,
         telefono || null,
         mensaje.trim()
       ]
@@ -43,12 +94,30 @@ async function crearSolicitud(req, res) {
       }
     }
 
+    try {
+      await enviarCorreoSolicitud({
+        usuario,
+        telefono,
+        mensaje: mensaje.trim(),
+        piezas: Array.isArray(piezas) ? piezas : [],
+        solicitudId
+      });
+    } catch (errorCorreo) {
+      console.error(
+        'La solicitud se guardó, pero no se pudo enviar el correo:',
+        errorCorreo
+      );
+    }
+
     res.status(201).json({
       mensaje: 'Solicitud enviada correctamente',
       solicitudId
     });
   } catch (error) {
-    console.error('Error al crear solicitud:', error);
+    console.error(
+      'Error al crear solicitud:',
+      error
+    );
 
     res.status(500).json({
       mensaje: 'No se pudo guardar la solicitud'
@@ -87,7 +156,10 @@ async function listarMisSolicitudes(req, res) {
 
     res.json(solicitudes);
   } catch (error) {
-    console.error('Error al listar solicitudes:', error);
+    console.error(
+      'Error al listar solicitudes:',
+      error
+    );
 
     res.status(500).json({
       mensaje: 'No se pudieron cargar tus solicitudes'
@@ -126,7 +198,10 @@ async function listarTodasLasSolicitudes(req, res) {
 
     res.json(solicitudes);
   } catch (error) {
-    console.error('Error al listar solicitudes administrativas:', error);
+    console.error(
+      'Error al listar solicitudes administrativas:',
+      error
+    );
 
     res.status(500).json({
       mensaje: 'No se pudieron cargar las solicitudes'
@@ -168,7 +243,10 @@ async function actualizarEstadoSolicitud(req, res) {
       mensaje: 'Estado actualizado correctamente'
     });
   } catch (error) {
-    console.error('Error al actualizar estado:', error);
+    console.error(
+      'Error al actualizar estado:',
+      error
+    );
 
     res.status(500).json({
       mensaje: 'No se pudo actualizar el estado'

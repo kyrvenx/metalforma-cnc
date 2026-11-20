@@ -21,6 +21,7 @@ const Testimonio = ({ cita, autor }) => (
 const HomePage = () => {
   return (
     <main>
+      
       <section
         className="catalogo-hero"
         style={{
@@ -29,44 +30,87 @@ const HomePage = () => {
         }}
       >
         <div className="holder catalogo-hero-contenido">
-          <p className="etiqueta">DISEÑO · MECANIZADO · PRECISIÓN</p>
-          <h2>Precisión impulsada por tecnología CNC</h2>
+          <p className="etiqueta">
+            DISEÑO · MECANIZADO · PRECISIÓN
+          </p>
+
+          <h2>
+            Precisión impulsada por tecnología CNC
+          </h2>
 
           <p>
-            Piezas metálicas que toman forma con precisión. Diseñamos y
-            fabricamos soluciones para proyectos industriales, comerciales y
-            personales.
+            Piezas metálicas que toman forma con precisión.
+            Diseñamos y fabricamos soluciones para proyectos
+            industriales, comerciales y personales.
           </p>
-          <a className="boton" href="/contacto">
+
+          <a
+            className="boton"
+            href="/contacto"
+          >
             Solicitar presupuesto
           </a>
         </div>
       </section>
 
+      
       <section className="holder inicio-contenido">
         <div className="homeimg">
-          <img
-            src="/images/home/img01.jpg"
-            alt="Pieza metálica fabricada por MetalForma CNC"
-          />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{
+                    width: '80%',
+                    aspectRatio: '16 / 9',
+                    height: '50%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    margin: '0 auto',
+                  }}
+
+          >
+            <source
+              src="/video/metalforma-inicio.mp4"
+              type="video/mp4"
+            />
+
+            Tu navegador no puede reproducir este video.
+          </video>
         </div>
 
         <div className="columnas">
           <div className="bienvenidos">
-            <p className="etiqueta">NUESTRA PROPUESTA</p>
-            <h2>Del plano a la pieza terminada</h2>
+            <p className="etiqueta">
+              NUESTRA PROPUESTA
+            </p>
+
+            <h2>
+              Del plano a la pieza terminada
+            </h2>
+
             <p>
-              En MetalForma CNC trabajamos cada encargo con atención al
-              detalle, buscando que el resultado sea funcional, resistente y
-              fiel a la idea original.
+              En MetalForma CNC trabajamos cada encargo con
+              atención al detalle, buscando que el resultado sea
+              funcional, resistente y fiel a la idea original.
             </p>
           </div>
 
           <div className="testimonios">
-            <p className="etiqueta">EXPERIENCIAS</p>
-            <h2>Lo que valoran nuestros clientes</h2>
+            <p className="etiqueta">
+              EXPERIENCIAS
+            </p>
+
+            <h2>
+              Lo que valoran nuestros clientes
+            </h2>
+
             {testimonios.map((testimonio) => (
-              <Testimonio key={testimonio.autor} {...testimonio} />
+              <Testimonio
+                key={testimonio.autor}
+                {...testimonio}
+              />
             ))}
           </div>
         </div>

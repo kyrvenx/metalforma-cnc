@@ -12,6 +12,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var metalformaRouter = require('./routes/metalforma');
 var adminRouter = require('./routes/admin');
+var adminWebRouter = require('./routes/adminWeb');
 var novedadesRouter = require('./routes/novedades');
 var usuariosApiRouter = require('./routes/usuarios');
 var solicitudesRouter = require('./routes/solicitudes');
@@ -32,6 +33,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(
+  '/images',
+  express.static(
+    path.join(__dirname, '../frontend/public/images')
+  )
+);
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'metalforma-clave-local',
   resave: false,
@@ -47,6 +55,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 app.use('/api/transportes', metalformaRouter);
+
+app.use('/admin', adminWebRouter);
+
 app.use('/api/admin', adminRouter);
 app.use('/api/admin/novedades', novedadesRouter);
 app.use('/api/usuarios', usuariosApiRouter);
